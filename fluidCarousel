@@ -1,0 +1,172 @@
+/**
+ * Carousel
+ * Features: Adds a carousel to the page using a div element, must include jquery library
+ * @param: id - id of the carousel object
+ * @param: appendToId - where to add the carousel, must be an id
+ * @param: contents - an array containing content
+ */
+function Carousel(id,appendToId,contents,interval) {
+	this.id = id;
+	this.appendToId = appendToId;
+	this.contents = contents;
+	
+	var activeBullet = 0;
+	var selectedIndex;
+	var units = "px";
+	var parentId = $("#" + this.appendToId).parent();
+	var timerId = 0;
+	var contentMaxWidth = $(parentId).width();
+	
+	var carouselElement = document.createElement("div");
+	carouselElement.id = this.id;
+	$(carouselElement).appendTo("#" + this.appendToId);
+	
+	var contentArea = document.createElement("div");
+	contentArea.className = "carousel-content-area";
+	$(contentArea).width((contentMaxWidth*(contents.length)) + units);
+	$(contentArea).appendTo(carouselElement);
+	
+	var contentList = document.createElement("ul");
+	contentList.className = "carousel-content-list";
+	$(contentList).appendTo(contentArea);
+	
+	this.setWidth = function(width) {
+		contentArea.style.width = width*contents.length + units;
+		contentMaxWidth = width;
+		contentArea.style.left = -contentMaxWidth*activeBullet + units;
+		var contentListNodes = contentList.childNodes;
+		for(var i = 0; i < contentListNodes.length; i++) {
+			var node = contentListNodes.item(i);
+			if(node) {
+				if(node.nodeName == "LI")	{
+					node.style.width = width + units;
+				}
+			}
+		}
+	}
+	
+	var carouselBullets = document.createElement("ul");
+	carouselBullets.className = "carousel-bullets";
+	$(carouselBullets).appendTo(carouselElement);
+	
+	for(var i = 0; i < this.contents.length; i++) {
+		var contentItem = document.createElement("li");
+		contentItem.style.width = contentMaxWidth + units;
+		contentItem.innerHTML = this.contents[i];
+		$(contentItem).appendTo(contentList);
+		
+		var bulletItem = document.createElement("li");
+		if (i == 0) {
+			bulletItem.className = "active";
+		} else {
+			bulletItem.className = "inactive";
+		}
+		
+		bulletItem.onclick = function() {
+			selectedIndex = $(".carousel-bullets li").index(this);			
+			if(activeBullet < selectedIndex) {
+				// animate left
+				if(selectedIndex - activeBullet > 1) {
+					activeBullet += (selectedIndex-activeBullet);
+				} else {
+					++activeBullet;
+				}
+				setActiveBullet(carouselBullets);
+			} else if(activeBullet > selectedIndex) {
+				// animate right
+				if(activeBullet - selectedIndex > 1) {
+					activeBullet -= (activeBullet-selectedIndex);
+				} else {
+					--activeBullet;
+				}
+				setActiveBullet(carouselBullets);
+			} else {
+
+			}
+			animate();
+			clearInterval(timerId);
+			timerId = setInterval(carouselTimer,interval);
+		}
+		$(bulletItem).appendTo(carouselBullets);
+	}
+	
+	setActiveBullet = function(ulObj) { 
+		var bulletListNodes = ulObj.childNodes;
+		var liCounter = 0;
+		for(var i = 0; i < bulletListNodes.length; i++) {
+			var node = bulletListNodes.item(i);			
+			if(node) {
+				if(node.nodeName == "LI")	{
+					liCounter++;
+				}				
+				if(activeBullet == liCounter-1) {
+					$(".carousel-bullets li").each(function() {
+						$(this).removeClass("active").addClass("inactive");
+					});
+					$(node).removeClass("inactive").addClass("active");
+				}
+			}
+		}
+		
+	}
+	
+	animate = function() {
+		$(contentArea).stop().animate({left: -(contentMaxWidth*activeBullet)},400);
+	}
+	
+	var nextArrow = document.createElement("a");
+	nextArrow.className = "next";
+	nextArrow.onclick = function() {
+		if(activeBullet == contents.length-1) {
+			activeBullet = 0;
+		} else {
+			activeBullet++;
+		}
+		setActiveBullet(carouselBullets);
+		animate();
+		clearInterval(timerId);
+		timerId = setInterval(carouselTimer,interval);
+	};
+	$(nextArrow).appendTo(parentId);
+	
+	var previousArrow = document.createElement("a");
+	previousArrow.className = "previous";
+	previousArrow.onclick = function() {
+		if(activeBullet == 0) {
+			activeBullet = contents.length-1;
+		} else {
+			activeBullet--;
+		}	
+		setActiveBullet(carouselBullets);
+		animate();
+		clearInterval(timerId);
+		timerId = setInterval(carouselTimer,interval);
+	};
+	$(previousArrow).appendTo(parentId);
+	
+	window.onresize = function() {
+		carousel.setWidth($(parentId).width());
+	}
+
+	window.onload = function () {
+		timerId = setInterval(carouselTimer,interval);
+	}
+	
+	function carouselTimer() {
+		if(activeBullet == contents.length-1) {
+			activeBullet = 0;
+		} else {
+			activeBullet++;
+		}
+		setActiveBullet(carouselBullets);
+		animate();
+	}
+}
+
+var carousel = new Carousel('carousel','carouselContainer',
+["1. Proin semper, elit vitae vulputate iaculis, ipsum dolor elementum est, eget porttitor neque nisl euismod elit.",
+"2. Proin semper, elit vitae vulputate iaculis, ipsum dolor elementum est, eget porttitor neque nisl euismod elit. Etiam facilisis feugiat adipiscing. Fusce vitae congue massa. Cras sodales euismod tincidunt. Vivamus at eros sed lorem condimentum rutrum eu eu libero. Cras lobortis convallis sollicitudin. Ut imperdiet nibh a elit sagittis lacinia.",
+"3. Duis et enim ultricies, porttitor mi ut, egestas massa. Aliquam adipiscing vehicula nulla eget tempus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris iaculis lacinia imperdiet. Pellentesque iaculis urna vestibulum velit consequat porta. Proin lacus nisi, volutpat quis vestibulum sit amet, consequat a purus. Suspendisse semper lorem ac odio scelerisque sodales. Mauris egestas velit a quam dapibus, nec consectetur sapien posuere. Duis suscipit ante eros, et hendrerit mi tempor eget. Cras accumsan tellus mauris, sed lacinia nisl lacinia eget. Vestibulum accumsan vel ipsum nec eleifend. Integer gravida condimentum adipiscing. Fusce ligula neque, eleifend eu vulputate a, rhoncus quis justo. Cras eleifend, elit et malesuada tristique, massa augue lobortis velit, id pretium magna velit nec diam. Nullam eget lorem sed metus posuere molestie at at nibh.",
+"4. Nullam risus ipsum, fermentum vitae congue quis, placerat vel nibh. Mauris non odio feugiat, sollicitudin lorem vel, venenatis nulla. Morbi neque lectus, faucibus a elit at, adipiscing hendrerit felis. Integer eu facilisis eros. Cras auctor facilisis ligula, non semper nunc ultrices eget. Sed ac risus tortor. Nulla non diam vel ante blandit sodales. Nunc lobortis ornare lorem at varius. Vivamus venenatis consectetur luctus. Pellentesque venenatis lacus lorem, quis pulvinar justo vehicula vel."
+],5000
+);
