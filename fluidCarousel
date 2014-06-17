@@ -162,11 +162,4 @@ function Carousel(id,appendToId,contents,interval) {
 		animate();
 	}
 }
-
-var carousel = new Carousel('carousel','carouselContainer',
-["1. Proin semper, elit vitae vulputate iaculis, ipsum dolor elementum est, eget porttitor neque nisl euismod elit.",
-"2. Proin semper, elit vitae vulputate iaculis, ipsum dolor elementum est, eget porttitor neque nisl euismod elit. Etiam facilisis feugiat adipiscing. Fusce vitae congue massa. Cras sodales euismod tincidunt. Vivamus at eros sed lorem condimentum rutrum eu eu libero. Cras lobortis convallis sollicitudin. Ut imperdiet nibh a elit sagittis lacinia.",
-"3. Duis et enim ultricies, porttitor mi ut, egestas massa. Aliquam adipiscing vehicula nulla eget tempus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris iaculis lacinia imperdiet. Pellentesque iaculis urna vestibulum velit consequat porta. Proin lacus nisi, volutpat quis vestibulum sit amet, consequat a purus. Suspendisse semper lorem ac odio scelerisque sodales. Mauris egestas velit a quam dapibus, nec consectetur sapien posuere. Duis suscipit ante eros, et hendrerit mi tempor eget. Cras accumsan tellus mauris, sed lacinia nisl lacinia eget. Vestibulum accumsan vel ipsum nec eleifend. Integer gravida condimentum adipiscing. Fusce ligula neque, eleifend eu vulputate a, rhoncus quis justo. Cras eleifend, elit et malesuada tristique, massa augue lobortis velit, id pretium magna velit nec diam. Nullam eget lorem sed metus posuere molestie at at nibh.",
-"4. Nullam risus ipsum, fermentum vitae congue quis, placerat vel nibh. Mauris non odio feugiat, sollicitudin lorem vel, venenatis nulla. Morbi neque lectus, faucibus a elit at, adipiscing hendrerit felis. Integer eu facilisis eros. Cras auctor facilisis ligula, non semper nunc ultrices eget. Sed ac risus tortor. Nulla non diam vel ante blandit sodales. Nunc lobortis ornare lorem at varius. Vivamus venenatis consectetur luctus. Pellentesque venenatis lacus lorem, quis pulvinar justo vehicula vel."
-],5000
 );
